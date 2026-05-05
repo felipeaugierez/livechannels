@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calcio Streams</title>
-<link rel="icon" type="image/x-icon" href="/livechannels/favicon.ico?v=3">
-<link rel="shortcut icon" type="image/x-icon" href="/livechannels/favicon.ico?v=3">
+<link rel="icon" type="image/x-icon" href="/calciostreams/favicon.ico?v=3">
+<link rel="shortcut icon" type="image/x-icon" href="/calciostreams/favicon.ico?v=3">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -106,8 +106,7 @@ nav {
 .filter-pill.off-active { background: rgba(255,60,110,0.2); border-color: var(--accent); color: var(--accent); }
 
 .stats-row {
-  display: flex; gap: 16px; margin-bottom: 22px;
-  flex-wrap: wrap;
+  display: flex; gap: 16px; margin-bottom: 22px; flex-wrap: wrap;
 }
 .stat-chip {
   background: var(--surface); border: 1px solid var(--border);
@@ -154,21 +153,16 @@ nav {
   border-radius: 10px; padding: 12px; cursor: pointer;
   text-decoration: none; color: var(--text);
   display: flex; flex-direction: column; align-items: center;
-  gap: 8px; transition: all 0.18s; position: relative;
-  overflow: hidden;
+  gap: 8px; transition: all 0.18s; position: relative; overflow: hidden;
 }
 .ch-card:hover { border-color: var(--accent2); transform: translateY(-2px); background: var(--surface2); }
 .ch-card.offline-ch { opacity: 0.45; }
 .ch-card.offline-ch:hover { border-color: var(--offline); opacity: 0.7; }
-.ch-logo {
-  width: 56px; height: 40px; object-fit: contain;
-  filter: brightness(0.9);
-}
+.ch-logo { width: 56px; height: 40px; object-fit: contain; filter: brightness(0.9); }
 .ch-logo-fallback {
   width: 56px; height: 40px; background: var(--surface3);
   border-radius: 6px; display:flex; align-items:center; justify-content:center;
-  font-size: 10px; color: var(--muted); text-align: center; padding: 4px;
-  line-height: 1.2;
+  font-size: 10px; color: var(--muted); text-align: center; padding: 4px; line-height: 1.2;
 }
 .ch-name { font-size: 12px; font-weight: 500; text-align: center; line-height: 1.3; }
 .ch-status {
@@ -189,13 +183,10 @@ nav {
 }
 .stab:hover { border-color: var(--gold); color: var(--text); }
 .stab.active { background: var(--gold); border-color: var(--gold); color: #000; }
-.stab .count {
-  background: rgba(0,0,0,0.2); border-radius: 10px;
-  padding: 1px 6px; font-size: 11px;
-}
+.stab .count { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 1px 6px; font-size: 11px; }
 .stab.active .count { background: rgba(0,0,0,0.2); }
 
-.status-filters { display: flex; gap: 8px; margin-bottom: 20px; }
+.status-filters { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
 .sf-btn {
   background: var(--surface); border: 1px solid var(--border);
   color: var(--muted); padding: 6px 14px; border-radius: 6px;
@@ -236,12 +227,10 @@ nav {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 12px; padding: 16px 20px;
   display: flex; align-items: center; gap: 16px;
-  transition: border-color 0.2s; position: relative;
-  overflow: hidden;
+  transition: border-color 0.2s; position: relative; overflow: hidden;
 }
 .event-card::before {
-  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-  width: 3px;
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
 }
 .event-card.status-live::before { background: var(--live); }
 .event-card.status-upcoming::before { background: var(--upcoming); }
@@ -249,17 +238,12 @@ nav {
 .event-card:hover { border-color: var(--border); background: var(--surface2); }
 .event-card.status-finished { opacity: 0.6; }
 
-.ev-teams {
-  display: flex; align-items: center; gap: 10px;
-  min-width: 0; flex: 1;
-}
+.ev-teams { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
 .team-block {
   display: flex; flex-direction: column; align-items: center;
   gap: 5px; min-width: 52px;
 }
-.team-img {
-  width: 38px; height: 38px; object-fit: contain; border-radius: 4px;
-}
+.team-img { width: 38px; height: 38px; object-fit: contain; border-radius: 4px; }
 .team-img-fallback {
   width: 38px; height: 38px; background: var(--surface3);
   border-radius: 6px; display:flex; align-items:center; justify-content:center;
@@ -297,14 +281,9 @@ nav {
 .ev-channels {
   display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: flex-end;
 }
-.ev-ch-link {
-  text-decoration: none; transition: transform 0.15s; display: flex;
-}
+.ev-ch-link { text-decoration: none; transition: transform 0.15s; display: flex; }
 .ev-ch-link:hover { transform: scale(1.12); }
-.ev-ch-img {
-  width: 28px; height: 20px; object-fit: contain;
-  border-radius: 3px; background: var(--surface3);
-}
+.ev-ch-img { width: 28px; height: 20px; object-fit: contain; border-radius: 3px; background: var(--surface3); }
 .ev-ch-fallback {
   width: 28px; height: 20px; background: var(--surface3);
   border-radius: 3px; display: flex; align-items: center;
@@ -315,9 +294,7 @@ nav {
 .no-results { text-align: center; color: var(--muted); padding: 60px; }
 .no-results span { display: block; font-size: 48px; margin-bottom: 12px; }
 
-.spinner-wrap {
-  display: flex; align-items: center; justify-content: center; padding: 80px;
-}
+.spinner-wrap { display: flex; align-items: center; justify-content: center; padding: 80px; }
 .spinner {
   width: 40px; height: 40px; border: 3px solid var(--border);
   border-top-color: var(--accent); border-radius: 50%;
@@ -518,6 +495,49 @@ function convertTime(timeStr) {
   } catch(e) { return timeStr; }
 }
 
+// ── STATUS SANITY CHECK ──
+// If the API wrongly marks a future event as live, fix it
+function sanitizeStatus(ev) {
+  if (ev.status !== 'live') return ev;
+  if (!ev.time) return ev;
+
+  const match = ev.time.match(/(\d{1,2}):(\d{2})\s*(GMT|UTC|BST|CET|CEST|EST|EDT|PST|PDT|IST|WET|WAT|EET|MSK|GST|PKT|ICT|SGT|JST|AEST|NZST)?/i);
+  if (!match) return ev;
+
+  const hours = parseInt(match[1]);
+  const mins  = parseInt(match[2]);
+  const abbr  = (match[3] || 'GMT').toUpperCase();
+  const SRC_OFFSETS = {
+    GMT:0, UTC:0, WET:0,
+    BST:1, CET:1, WAT:1,
+    CEST:2, EET:2,
+    MSK:3, GST:4,
+    PKT:5, IST:5.5, ICT:7,
+    SGT:8, CST:8, JST:9,
+    AEST:10, NZST:12,
+    EST:-5, EDT:-4, PST:-8, PDT:-7
+  };
+  const srcOff  = SRC_OFFSETS[abbr] ?? 0;
+  const srcOffH = Math.floor(srcOff);
+  const srcOffM = Math.round((srcOff - srcOffH) * 60);
+
+  const now = new Date();
+  const utcMs = Date.UTC(
+    now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
+    hours - srcOffH, mins - srcOffM
+  );
+
+  // How many minutes from now until the event starts (positive = future)
+  const diffMinutes = (utcMs - now.getTime()) / 60000;
+
+  // If the event starts more than 10 minutes from now, it cannot be live
+  if (diffMinutes > 10) {
+    return { ...ev, status: 'upcoming' };
+  }
+
+  return ev;
+}
+
 // ── TAB SWITCH ──
 function switchTab(t) {
   ['channels','events'].forEach(id => {
@@ -557,7 +577,8 @@ function buildCountryTabs() {
   const codes = [...new Set(allChannels.map(c => c.code))];
   const el = document.getElementById('countryTabsEl');
   el.innerHTML = '';
-  const all = mkEl('button','ctab active','🌍 All'); all.id='ctab-all'; all.onclick=()=>setCountry('all'); el.appendChild(all);
+  const all = mkEl('button','ctab active','🌍 All');
+  all.id='ctab-all'; all.onclick=()=>setCountry('all'); el.appendChild(all);
   codes.forEach(code => {
     const b = mkEl('button','ctab', COUNTRY_NAMES[code]||code.toUpperCase());
     b.id = 'ctab-'+code; b.onclick = () => setCountry(code); el.appendChild(b);
@@ -588,16 +609,19 @@ function renderChannels() {
     return true;
   });
 
-  const online = filtered.filter(c=>c.status==='online').length;
+  const online  = filtered.filter(c=>c.status==='online').length;
   const offline = filtered.filter(c=>c.status==='offline').length;
-  document.getElementById('statTotal').textContent = filtered.length;
-  document.getElementById('statOnline').textContent = online;
+  document.getElementById('statTotal').textContent   = filtered.length;
+  document.getElementById('statOnline').textContent  = online;
   document.getElementById('statOffline').textContent = offline;
 
   const grid = document.getElementById('channelGrid');
   grid.innerHTML = '';
 
-  if (!filtered.length) { grid.innerHTML = '<div class="no-results"><span>📡</span>No channels found.</div>'; return; }
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="no-results"><span>📡</span>No channels found.</div>';
+    return;
+  }
 
   if (activeCountry !== 'all' || searchVal) {
     const g = mkEl('div','channels-grid');
@@ -629,7 +653,9 @@ function makeChannelCard(ch) {
     img.src = ch.image; img.alt = ch.name; img.className = 'ch-logo';
     img.onerror = () => { img.replaceWith(mkLogoFallback(ch.name)); };
     imgWrap.appendChild(img);
-  } else { imgWrap.appendChild(mkLogoFallback(ch.name)); }
+  } else {
+    imgWrap.appendChild(mkLogoFallback(ch.name));
+  }
   const name = mkEl('span','ch-name', ch.name);
   a.appendChild(dot); a.appendChild(imgWrap); a.appendChild(name);
   return a;
@@ -648,7 +674,8 @@ async function loadEvents() {
     document.getElementById('eventsLoadingSpinner').style.display = 'none';
     document.getElementById('eventContent').style.display = 'block';
 
-    const totalLive = Object.values(eventsData).flat().filter(e=>e.status==='live').length;
+    // Count real live events after sanity check
+    const totalLive = Object.values(eventsData).flat().map(sanitizeStatus).filter(e=>e.status==='live').length;
     const sub = Object.keys(eventsData).filter(k=>eventsData[k].length>0).length + ' sports — ' + Object.values(eventsData).flat().length + ' events today';
     document.getElementById('eventSub').textContent = sub;
 
@@ -664,7 +691,10 @@ async function loadEvents() {
     buildTzSelect();
     buildSportsTabs();
     const firstSport = Object.keys(eventsData).find(k => eventsData[k].length > 0);
-    if (firstSport) { activeSport = firstSport; document.getElementById('stab-'+firstSport)?.classList.add('active'); }
+    if (firstSport) {
+      activeSport = firstSport;
+      document.getElementById('stab-'+firstSport)?.classList.add('active');
+    }
     renderEvents();
   } catch(e) {
     document.getElementById('eventsLoadingSpinner').innerHTML = '<p style="color:var(--muted)">Failed to load events.</p>';
@@ -677,7 +707,7 @@ function buildSportsTabs() {
   el.innerHTML = '';
   for (const [sport, evs] of Object.entries(eventsData)) {
     if (!evs.length) continue;
-    const liveN = evs.filter(e=>e.status==='live').length;
+    const liveN = evs.map(sanitizeStatus).filter(e=>e.status==='live').length;
     const b = document.createElement('button');
     b.className = 'stab'; b.id = 'stab-'+sport;
     b.innerHTML = `${SPORT_ICONS[sport]||'🏆'} ${sport} <span class="count">${evs.length}${liveN?' <span style="color:var(--live)">●'+liveN+'</span>':''}</span>`;
@@ -707,19 +737,24 @@ function renderEvents() {
   list.innerHTML = '';
   if (!activeSport || !eventsData[activeSport]) return;
 
-  let evs = eventsData[activeSport].filter(e => {
-    if (efMode !== 'all' && e.status !== efMode) return false;
-    if (searchVal) {
-      const searchIn = [e.homeTeam, e.awayTeam, e.event, e.tournament, e.country].filter(Boolean).join(' ').toLowerCase();
-      if (!searchIn.includes(searchVal)) return false;
-    }
-    return true;
-  });
+  let evs = eventsData[activeSport]
+    .map(sanitizeStatus)
+    .filter(e => {
+      if (efMode !== 'all' && e.status !== efMode) return false;
+      if (searchVal) {
+        const searchIn = [e.homeTeam, e.awayTeam, e.event, e.tournament, e.country].filter(Boolean).join(' ').toLowerCase();
+        if (!searchIn.includes(searchVal)) return false;
+      }
+      return true;
+    });
 
   const order = {live:0, upcoming:1, finished:2};
   evs.sort((a,b) => (order[a.status]??3) - (order[b.status]??3));
 
-  if (!evs.length) { list.innerHTML = '<div class="no-results"><span>🏟️</span>No events found.</div>'; return; }
+  if (!evs.length) {
+    list.innerHTML = '<div class="no-results"><span>🏟️</span>No events found.</div>';
+    return;
+  }
   evs.forEach(ev => list.appendChild(makeEventCard(ev)));
 }
 
@@ -736,7 +771,7 @@ function makeEventCard(ev) {
     teams.appendChild(mid);
     teams.appendChild(makeTeamBlock(ev.awayTeam, ev.awayTeamIMG));
     card.appendChild(teams);
-    const tour = mkEl('div','','');
+    const tour = mkEl('div','');
     tour.innerHTML = `<div style="font-size:12px;color:var(--muted)">${escHtml(ev.tournament||'')} <span style="margin:0 4px">·</span> <img src="${escHtml(ev.countryIMG||'')}" style="width:14px;height:10px;border-radius:1px;vertical-align:middle;"> ${escHtml(ev.country||'')}</div>`;
     card.appendChild(tour);
   } else {
