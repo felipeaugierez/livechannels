@@ -690,34 +690,26 @@ function makeDrawer(ev) {
       }
       btn.appendChild(document.createTextNode(ch.channel_name));
 
-      btn.addEventListener('click', e => {
-        e.stopPropagation();
-        bar.querySelectorAll('.drawer-ch-btn').forEach(b => b.classList.remove('active-ch'));
-        btn.classList.add('active-ch');
+     btn.addEventListener('click', e => {
+  e.stopPropagation();
+  bar.querySelectorAll('.drawer-ch-btn').forEach(b => b.classList.remove('active-ch'));
+  btn.classList.add('active-ch');
 
-        const url = getPlayerUrl(ch);
-        if (!url) {
-          playerDiv.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:13px">⚠️ Could not build player URL for this channel</div>`;
-          playerDiv.classList.add('visible');
-          return;
-        }
+  console.log('Player URL:', ch.url);
 
-        // log so we can debug if needed
-        console.log('Player URL:', url);
-
-        playerDiv.innerHTML = '';
-        const iframe = document.createElement('iframe');
-        iframe.src = url;
-        iframe.setAttribute('marginheight','0');
-        iframe.setAttribute('marginwidth','0');
-        iframe.setAttribute('scrolling','no');
-        iframe.setAttribute('frameborder','0');
-        iframe.setAttribute('allow','encrypted-media; fullscreen');
-        iframe.setAttribute('allowfullscreen','');
-        playerDiv.appendChild(iframe);
-        playerDiv.classList.add('visible');
-        setTimeout(() => playerDiv.scrollIntoView({ behavior:'smooth', block:'nearest' }), 100);
-      });
+  playerDiv.innerHTML = '';
+  const iframe = document.createElement('iframe');
+  iframe.src = ch.url;  // ← the events API already gives us the correct player URL
+  iframe.setAttribute('marginheight','0');
+  iframe.setAttribute('marginwidth','0');
+  iframe.setAttribute('scrolling','no');
+  iframe.setAttribute('frameborder','0');
+  iframe.setAttribute('allow','encrypted-media; fullscreen');
+  iframe.setAttribute('allowfullscreen','');
+  playerDiv.appendChild(iframe);
+  playerDiv.classList.add('visible');
+  setTimeout(() => playerDiv.scrollIntoView({ behavior:'smooth', block:'nearest' }), 100);
+});
 
       bar.appendChild(btn);
     });
