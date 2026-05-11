@@ -193,7 +193,6 @@ nav {
 
 /* ── EVENT CARD ── */
 .events-list { display: flex; flex-direction: column; gap: 6px; }
-
 .event-wrap { display: flex; flex-direction: column; }
 
 .event-card {
@@ -213,7 +212,6 @@ nav {
 .event-card.open { border-color: var(--accent2); border-bottom-left-radius: 0; border-bottom-right-radius: 0; background: var(--surface2); }
 .event-card.status-finished { opacity: 0.6; }
 
-/* chevron */
 .ev-chevron {
   margin-left: auto; font-size: 11px; color: var(--muted);
   transition: transform 0.25s; flex-shrink: 0;
@@ -258,7 +256,7 @@ nav {
   border: 1px solid var(--border); padding: 3px 8px; border-radius: 10px; white-space: nowrap;
 }
 
-/* ── CHANNEL DRAWER ── */
+/* ── DRAWER ── */
 .ch-drawer {
   display: none;
   background: var(--surface2);
@@ -266,7 +264,7 @@ nav {
   border-top: none;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
-  padding: 14px 18px;
+  overflow: hidden;
   animation: slideDown 0.2s ease;
 }
 .ch-drawer.open { display: block; }
@@ -276,34 +274,55 @@ nav {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.drawer-header {
-  font-size: 11px; color: var(--muted); text-transform: uppercase;
-  letter-spacing: 1px; margin-bottom: 10px; font-weight: 600;
-}
-
-.drawer-channels {
+/* channel picker bar */
+.drawer-ch-bar {
   display: flex; flex-wrap: wrap; gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface3);
 }
-
 .drawer-ch-btn {
   display: flex; align-items: center; gap: 7px;
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 8px; padding: 6px 12px;
-  text-decoration: none; color: var(--text);
-  font-size: 12px; font-weight: 500;
+  color: var(--text); font-size: 12px; font-weight: 500;
   transition: all 0.15s; cursor: pointer; white-space: nowrap;
+  border: none; font-family: 'Barlow', sans-serif;
 }
-.drawer-ch-btn:hover { border-color: var(--accent2); background: var(--surface3); color: #fff; }
+.drawer-ch-btn:hover { background: var(--surface2); border: 1px solid var(--accent2); color: #fff; }
+.drawer-ch-btn.active-ch { background: var(--accent2); color: #000; border: 1px solid var(--accent2); }
 .drawer-ch-btn img {
   width: 26px; height: 18px; object-fit: contain; border-radius: 2px;
   background: var(--surface3); flex-shrink: 0;
 }
 .drawer-ch-btn .ch-img-fallback {
-  width: 26px; height: 18px; background: var(--surface3);
+  width: 26px; height: 18px; background: var(--surface2);
   border-radius: 2px; display:flex; align-items:center; justify-content:center;
   font-size: 8px; color: var(--muted); flex-shrink: 0;
 }
-.no-channels-drawer { font-size: 12px; color: var(--muted); font-style: italic; }
+.no-channels-drawer {
+  padding: 12px 16px; font-size: 12px; color: var(--muted); font-style: italic;
+}
+
+/* player area */
+.drawer-player {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  position: relative;
+}
+.drawer-player iframe {
+  width: 100%; height: 100%;
+  border: none; display: block;
+}
+.drawer-player-placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 10px; color: var(--muted); font-size: 13px;
+  background: #000;
+}
+.drawer-player-placeholder span { font-size: 36px; }
 
 .no-results { text-align: center; color: var(--muted); padding: 60px; }
 .no-results span { display: block; font-size: 48px; margin-bottom: 12px; }
@@ -390,6 +409,9 @@ nav {
 <script>
 const CHANNELS_API = 'https://api.cdnlivetv.tv/api/v1/channels/?user=cdnlivetv&plan=free';
 const EVENTS_API   = 'https://api.cdnlivetv.tv/api/v1/events/sports/?user=cdnlivetv&plan=free';
+const PLAYER_BASE  = 'https://cdnlivetv.tv/api/v1/channels/player/';
+const PLAYER_USER  = 'cdnlivetv';
+const PLAYER_PLAN  = 'free';
 
 const TZ_OPTIONS = [
   { label:"Local system time (auto)",          value:"__LOCAL__" },
@@ -471,8 +493,7 @@ function convertTime(timeStr) {
   if (!timeStr) return timeStr;
   const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(GMT|UTC|BST|CET|CEST|EST|EDT|PST|PDT|IST|WET|WAT|EET|MSK|GST|PKT|ICT|SGT|JST|AEST|NZST)?/i);
   if (!match) return timeStr;
-  const hours = parseInt(match[1]);
-  const mins  = parseInt(match[2]);
+  const hours = parseInt(match[1]), mins = parseInt(match[2]);
   const abbr  = (match[3] || 'GMT').toUpperCase();
   const SRC_OFFSETS = {
     GMT:0,UTC:0,WET:0,BST:1,CET:1,WAT:1,CEST:2,EET:2,MSK:3,GST:4,
@@ -699,23 +720,54 @@ function renderEvents() {
   evs.forEach(ev => list.appendChild(makeEventWrap(ev)));
 }
 
+// ── PLAYER URL ──
+function buildPlayerUrl(ch) {
+  // ch.url is like https://cdnlivetv.tv/livechannels/abc-us
+  // We extract name and code from ch.url or fall back to ch.channel_name
+  // The API gives us ch.url — parse the slug from it
+  try {
+    const slug = ch.url.split('/').filter(Boolean).pop(); // e.g. "abc-us"
+    const parts = slug.split('-');
+    // code is last part if 2-3 chars, name is the rest
+    const code = parts[parts.length - 1];
+    const name = parts.slice(0, -1).join('-');
+    return `${PLAYER_BASE}?name=${encodeURIComponent(name)}&code=${encodeURIComponent(code)}&user=${PLAYER_USER}&plan=${PLAYER_PLAN}`;
+  } catch(e) {
+    // fallback: use channel_name slugified
+    const slug = (ch.channel_name || ch.name || '').toLowerCase().replace(/\s+/g,'-');
+    return `${PLAYER_BASE}?name=${encodeURIComponent(slug)}&code=us&user=${PLAYER_USER}&plan=${PLAYER_PLAN}`;
+  }
+}
+
 // ── EVENT WRAP (card + drawer) ──
 function makeEventWrap(ev) {
   const wrap = mkEl('div','event-wrap');
   const card = makeEventCard(ev);
   const drawer = makeDrawer(ev);
+
   card.addEventListener('click', () => {
     const isOpen = card.classList.contains('open');
-    // Close all others
+    // close all open drawers and stop their iframes
     document.querySelectorAll('.event-card.open').forEach(c => {
       c.classList.remove('open');
-      c.nextElementSibling?.classList.remove('open');
+      const d = c.nextElementSibling;
+      if (d) {
+        d.classList.remove('open');
+        const player = d.querySelector('.drawer-player');
+        if (player) player.innerHTML = '';
+      }
     });
     if (!isOpen) {
       card.classList.add('open');
       drawer.classList.add('open');
+      // auto-load first channel if any
+      if (ev.channels && ev.channels.length > 0) {
+        const firstBtn = drawer.querySelector('.drawer-ch-btn');
+        if (firstBtn) firstBtn.click();
+      }
     }
   });
+
   wrap.appendChild(card);
   wrap.appendChild(drawer);
   return wrap;
@@ -752,7 +804,6 @@ function makeEventCard(ev) {
     card.appendChild(eb);
   }
 
-  // Right side: status + channel count + chevron
   const meta = mkEl('div','ev-meta');
   meta.appendChild(mkEl('span','ev-status '+ev.status, ev.status.toUpperCase()));
   const chCount = ev.channels?.length || 0;
@@ -766,34 +817,57 @@ function makeEventCard(ev) {
 
 function makeDrawer(ev) {
   const drawer = mkEl('div','ch-drawer');
-  const hdr = mkEl('div','drawer-header',
-    ev.homeTeam && ev.awayTeam
-      ? `${ev.homeTeam} vs ${ev.awayTeam} — Available streams`
-      : `${ev.event||'Event'} — Available streams`
-  );
-  drawer.appendChild(hdr);
 
-  const row = mkEl('div','drawer-channels');
+  // ── channel picker bar ──
+  const bar = mkEl('div','drawer-ch-bar');
+  const playerDiv = mkEl('div','drawer-player');
+
   if (ev.channels && ev.channels.length) {
-    ev.channels.forEach(ch => {
-      const a = document.createElement('a');
-      a.href=ch.url; a.target='_blank'; a.rel='noopener noreferrer';
-      a.className='drawer-ch-btn';
+    // placeholder shown before a channel is picked
+    playerDiv.innerHTML = `<div class="drawer-player-placeholder"><span>📺</span>Select a stream above to watch</div>`;
+
+    ev.channels.forEach((ch, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'drawer-ch-btn';
+
       if (ch.image) {
         const img = document.createElement('img');
-        img.src=ch.image; img.alt=ch.channel_name;
-        img.onerror=()=>img.replaceWith(mkEl('span','ch-img-fallback','TV'));
-        a.appendChild(img);
+        img.src = ch.image; img.alt = ch.channel_name;
+        img.onerror = () => img.replaceWith(mkEl('span','ch-img-fallback','TV'));
+        btn.appendChild(img);
       } else {
-        a.appendChild(mkEl('span','ch-img-fallback','TV'));
+        btn.appendChild(mkEl('span','ch-img-fallback','TV'));
       }
-      a.appendChild(document.createTextNode(ch.channel_name));
-      row.appendChild(a);
+      btn.appendChild(document.createTextNode(ch.channel_name));
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation(); // don't close the drawer
+        // highlight active
+        bar.querySelectorAll('.drawer-ch-btn').forEach(b => b.classList.remove('active-ch'));
+        btn.classList.add('active-ch');
+        // build and load iframe
+        const url = buildPlayerUrl(ch);
+        playerDiv.innerHTML = '';
+        const iframe = document.createElement('iframe');
+        iframe.src = url;
+        iframe.setAttribute('marginheight','0');
+        iframe.setAttribute('marginwidth','0');
+        iframe.setAttribute('scrolling','no');
+        iframe.setAttribute('frameborder','0');
+        iframe.setAttribute('allow','encrypted-media');
+        iframe.setAttribute('allowfullscreen','');
+        playerDiv.appendChild(iframe);
+      });
+
+      bar.appendChild(btn);
     });
   } else {
-    row.appendChild(mkEl('span','no-channels-drawer','No streams available'));
+    bar.appendChild(mkEl('span','no-channels-drawer','No streams available'));
+    playerDiv.innerHTML = `<div class="drawer-player-placeholder"><span>📡</span>No streams for this event</div>`;
   }
-  drawer.appendChild(row);
+
+  drawer.appendChild(bar);
+  drawer.appendChild(playerDiv);
   return drawer;
 }
 
