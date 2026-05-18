@@ -598,7 +598,57 @@ function renderEvents() {
   const order = {live:0,upcoming:1,finished:2};
   evs.sort((a,b)=>(order[a.status]??3)-(order[b.status]??3));
   if (!evs.length) { list.innerHTML='<div class="no-results"><span>🏟️</span>No events found.</div>'; return; }
-  evs.forEach(ev => list.appendChild(makeEventWrap(ev)));
+
+  // Group by country for Soccer, flat list for everything else
+  if (activeSport === 'Soccer') {
+    // within each status group, group by country
+    const statusGroups = [{key:'live',label:'🔴 Live'},{key:'upcoming',label:'🔵 Upcoming'},{key:'finished',label:'⚫ Finished'}];
+    statusGroups.forEach(sg => {
+      const sgEvs = evs.filter(e => e.status === sg.key);
+      if (!sgEvs.length) return;
+
+      // group by country
+      const byCountry = {};
+      sgEvs.forEach(e => {
+        const c = e.country || 'Other';
+        if (!byCountry[c]) byCountry[c] = { evs: [], img: e.countryIMG || '' };
+        byCountry[c].evs.push(e);
+      });
+
+      // status header
+      const statusHdr = document.createElement('div');
+      statusHdr.style.cssText = `
+        font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700;
+        letter-spacing:1px; text-transform:uppercase; color:var(--muted);
+        padding: 18px 4px 8px; border-bottom: 1px solid var(--border); margin-bottom:8px;
+      `;
+      statusHdr.textContent = sg.label;
+      list.appendChild(statusHdr);
+
+      // each country block
+      for (const [country, data] of Object.entries(byCountry)) {
+        // country header
+        const chdr = document.createElement('div');
+        chdr.style.cssText = `
+          display:flex; align-items:center; gap:8px;
+          font-family:'Barlow Condensed',sans-serif; font-size:17px; font-weight:700;
+          letter-spacing:0.5px; padding: 12px 4px 8px; color:var(--text);
+        `;
+        chdr.innerHTML = data.img
+          ? `<img src="${escHtml(data.img)}" style="width:20px;height:14px;border-radius:2px;object-fit:cover;"> ${escHtml(country)}`
+          : escHtml(country);
+        list.appendChild(chdr);
+
+        // matches in this country
+        const countryGroup = document.createElement('div');
+        countryGroup.style.cssText = 'display:flex;flex-direction:column;gap:6px;margin-bottom:10px;';
+        data.evs.forEach(ev => countryGroup.appendChild(makeEventWrap(ev)));
+        list.appendChild(countryGroup);
+      }
+    });
+  } else {
+    evs.forEach(ev => list.appendChild(makeEventWrap(ev)));
+  }
 }
 
 // ── EVENT WRAP ──
